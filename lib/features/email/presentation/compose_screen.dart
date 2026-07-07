@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_snackbar.dart';
+import '../providers/email_providers.dart';
 
 class ComposeScreen extends ConsumerStatefulWidget {
   const ComposeScreen({super.key});
@@ -36,6 +37,11 @@ class _ComposeScreenState extends ConsumerState<ComposeScreen> {
     setState(() => _sending = true);
     await Future.delayed(const Duration(milliseconds: 900));
     if (!mounted) return;
+    ref.read(emailProvider.notifier).sendEmail(
+          to: _to.text.trim(),
+          subject: _subject.text,
+          body: _body.text,
+        );
     setState(() => _sending = false);
     AppSnackbar.success(context, 'Emel dihantar ke ${_to.text} ✓');
     context.pop();

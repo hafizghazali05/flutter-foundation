@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/utils/extensions.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/app_snackbar.dart';
+import '../domain/email_models.dart';
 import '../providers/email_providers.dart';
 
 class InboxScreen extends ConsumerWidget {
@@ -13,23 +14,42 @@ class InboxScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emails = ref.watch(emailProvider);
+    final folder = ref.watch(emailFolderProvider);
+    final emails = ref
+        .watch(emailProvider)
+        .where((e) => e.folder == folder)
+        .toList();
     final unread = ref.watch(unreadEmailCountProvider);
     final scheme = context.colors;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Inbox'),
+        title: Text(folder == EmailFolder.inbox ? 'Inbox' : 'Sent'),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(28),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-              child: Text(
-                '$unread unread',
-                style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 13),
-              ),
+          preferredSize: const Size.fromHeight(56),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+            child: Row(
+              children: [
+                SegmentedButton<EmailFolder>(
+                  segments: [
+                    ButtonSegment(
+                      value: EmailFolder.inbox,
+                      label: Text(unread > 0 ? 'Inbox ($unread)' : 'Inbox'),
+                      icon: const Icon(Icons.inbox_rounded),
+                    ),
+                    const ButtonSegment(
+                      value: EmailFolder.sent,
+                      label: Text('Sent'),
+                      icon: Icon(Icons.send_rounded),
+                    ),
+                  ],
+                  selected: {folder},
+                  showSelectedIcon: false,
+                  onSelectionChanged: (s) =>
+                      ref.read(emailFolderProvider.notifier).set(s.first),
+                ),
+              ],
             ),
           ),
         ),
@@ -40,7 +60,17 @@ class InboxScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: ListView.separated(
+      body: emails.isEmpty
+          ? Center(
+              child: Text(
+                folder == EmailFolder.sent
+                    ? 'Belum ada emel dihantar.\nCuba Compose satu!'
+                    : 'Inbox kosong',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: scheme.onSurfaceVariant),
+              ),
+            )
+          : ListView.separated(
         padding: const EdgeInsets.symmetric(vertical: 4),
         itemCount: emails.length,
         separatorBuilder: (_, _) =>

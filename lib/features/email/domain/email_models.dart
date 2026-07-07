@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// Which mailbox a message lives in.
+enum EmailFolder { inbox, sent }
+
 class EmailMessage {
   final String id;
   final String sender;
@@ -12,6 +15,7 @@ class EmailMessage {
   final bool starred;
   final Color avatarColor;
   final List<String> labels;
+  final EmailFolder folder;
 
   const EmailMessage({
     required this.id,
@@ -25,9 +29,10 @@ class EmailMessage {
     this.starred = false,
     required this.avatarColor,
     this.labels = const [],
+    this.folder = EmailFolder.inbox,
   });
 
-  EmailMessage copyWith({bool? read, bool? starred}) {
+  EmailMessage copyWith({bool? read, bool? starred, EmailFolder? folder}) {
     return EmailMessage(
       id: id,
       sender: sender,
@@ -40,6 +45,7 @@ class EmailMessage {
       starred: starred ?? this.starred,
       avatarColor: avatarColor,
       labels: labels,
+      folder: folder ?? this.folder,
     );
   }
 }

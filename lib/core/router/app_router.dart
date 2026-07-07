@@ -1,15 +1,22 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/login_screen.dart';
 import '../../features/calendar/calendar_screen.dart';
 import '../../features/chat/presentation/chat_detail_screen.dart';
 import '../../features/components/components_screen.dart';
+import '../../features/courier/domain/courier_models.dart';
+import '../../features/courier/presentation/courier_screen.dart';
+import '../../features/courier/presentation/tracking_screen.dart';
 import '../../features/email/presentation/compose_screen.dart';
 import '../../features/email/presentation/email_detail_screen.dart';
+import '../../features/map/presentation/map_screen.dart';
+import '../../features/notifications/presentation/notifications_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/settings/currency_screen.dart';
 import '../../features/settings/faq_screen.dart';
 import '../../features/settings/two_factor_screen.dart';
+import '../../features/wallet/presentation/wallet_screen.dart';
 import '../widgets/root_shell.dart';
 
 /// App navigation. The root `/` hosts the bottom-nav shell (Home, Chat, Email,
@@ -38,6 +45,35 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/components',
       builder: (context, state) => const ComponentsScreen(),
+    ),
+    GoRoute(
+      path: '/map',
+      builder: (context, state) => const MapScreen(),
+    ),
+    GoRoute(
+      path: '/wallet',
+      builder: (context, state) => const WalletScreen(),
+    ),
+    GoRoute(
+      path: '/notifications',
+      builder: (context, state) => const NotificationsScreen(),
+    ),
+    // Keep /courier/tracking before /courier so it is matched first.
+    GoRoute(
+      path: '/courier/tracking',
+      builder: (context, state) {
+        final shipment = state.extra;
+        if (shipment is! Shipment) {
+          return const Scaffold(
+            body: Center(child: Text('Tiada penghantaran dipilih')),
+          );
+        }
+        return TrackingScreen(shipment: shipment);
+      },
+    ),
+    GoRoute(
+      path: '/courier',
+      builder: (context, state) => const CourierScreen(),
     ),
     GoRoute(
       path: '/profile',

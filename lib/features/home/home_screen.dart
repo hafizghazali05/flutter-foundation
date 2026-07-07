@@ -10,6 +10,7 @@ import '../../core/utils/extensions.dart';
 import '../../core/utils/formatters.dart';
 import '../../core/widgets/app_snackbar.dart';
 import '../../core/widgets/section_header.dart';
+import '../notifications/providers/notification_providers.dart';
 import 'widgets/stories_bar.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -19,6 +20,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authProvider);
     final currency = ref.watch(currencyProvider);
+    final unreadNotif = ref.watch(unreadNotificationCountProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,9 +37,12 @@ class HomeScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
-            icon: const Badge(child: Icon(Icons.notifications_outlined)),
-            onPressed: () =>
-                AppSnackbar.info(context, 'Tiada notifikasi baru'),
+            icon: Badge(
+              isLabelVisible: unreadNotif > 0,
+              label: Text('$unreadNotif'),
+              child: const Icon(Icons.notifications_outlined),
+            ),
+            onPressed: () => context.push('/notifications'),
           ),
           const SizedBox(width: 4),
         ],
@@ -51,7 +56,10 @@ class HomeScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: _BalanceCard(currency: currency),
+            child: GestureDetector(
+              onTap: () => context.push('/wallet'),
+              child: _BalanceCard(currency: currency),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -186,6 +194,12 @@ class _QuickActions extends StatelessWidget {
           () => ref.read(shellIndexProvider.notifier).set(1)),
       (Icons.mail_rounded, 'Email', const Color(0xFFEB5757),
           () => ref.read(shellIndexProvider.notifier).set(2)),
+      (Icons.account_balance_wallet_rounded, 'Wallet', const Color(0xFF1F8A50),
+          () => context.push('/wallet')),
+      (Icons.local_shipping_rounded, 'Kurier', const Color(0xFFF2994A),
+          () => context.push('/courier')),
+      (Icons.map_rounded, 'Map', const Color(0xFF2D9CDB),
+          () => context.push('/map')),
       (Icons.bar_chart_rounded, 'Charts', const Color(0xFF17A67B),
           () => ref.read(shellIndexProvider.notifier).set(3)),
       (Icons.calendar_month_rounded, 'Calendar', const Color(0xFFF2994A),
