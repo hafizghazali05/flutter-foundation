@@ -1,0 +1,58 @@
+import 'package:go_router/go_router.dart';
+
+import '../../features/auth/login_screen.dart';
+import '../../features/calendar/calendar_screen.dart';
+import '../../features/chat/presentation/chat_detail_screen.dart';
+import '../../features/components/components_screen.dart';
+import '../../features/email/presentation/compose_screen.dart';
+import '../../features/email/presentation/email_detail_screen.dart';
+import '../../features/settings/currency_screen.dart';
+import '../../features/settings/faq_screen.dart';
+import '../../features/settings/two_factor_screen.dart';
+import '../widgets/root_shell.dart';
+
+/// App navigation. The root `/` hosts the bottom-nav shell (Home, Chat, Email,
+/// Charts, Settings); detail screens are pushed on top so back navigation just
+/// works.
+final appRouter = GoRouter(
+  initialLocation: '/',
+  routes: [
+    GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
+    GoRoute(path: '/', builder: (context, state) => const RootShell()),
+    GoRoute(
+      path: '/chat/:id',
+      builder: (context, state) =>
+          ChatDetailScreen(threadId: state.pathParameters['id']!),
+    ),
+    // Keep /email/compose before /email/:id so it is not captured as an id.
+    GoRoute(
+      path: '/email/compose',
+      builder: (context, state) => const ComposeScreen(),
+    ),
+    GoRoute(
+      path: '/email/:id',
+      builder: (context, state) =>
+          EmailDetailScreen(emailId: state.pathParameters['id']!),
+    ),
+    GoRoute(
+      path: '/components',
+      builder: (context, state) => const ComponentsScreen(),
+    ),
+    GoRoute(
+      path: '/calendar',
+      builder: (context, state) => const CalendarScreen(),
+    ),
+    GoRoute(
+      path: '/settings/currency',
+      builder: (context, state) => const CurrencyScreen(),
+    ),
+    GoRoute(
+      path: '/settings/2fa',
+      builder: (context, state) => const TwoFactorScreen(),
+    ),
+    GoRoute(
+      path: '/settings/faq',
+      builder: (context, state) => const FaqScreen(),
+    ),
+  ],
+);
