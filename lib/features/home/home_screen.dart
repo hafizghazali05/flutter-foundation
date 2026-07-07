@@ -180,6 +180,8 @@ class _QuickActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final actions = <(IconData, String, Color, VoidCallback)>[
+      (Icons.person_rounded, 'Profile', const Color(0xFF00B8A9),
+          () => context.push('/profile')),
       (Icons.chat_bubble_rounded, 'Chat', const Color(0xFF6C4DF6),
           () => ref.read(shellIndexProvider.notifier).set(1)),
       (Icons.mail_rounded, 'Email', const Color(0xFFEB5757),
@@ -238,8 +240,12 @@ class _WhatsNewRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Card width scales with the screen so the row feels right on small phones
+    // and tablets alike, while keeping the next card peeking to hint at scroll.
+    final cardWidth =
+        (MediaQuery.sizeOf(context).width * 0.6).clamp(200.0, 280.0).toDouble();
     return SizedBox(
-      height: 128,
+      height: 150,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -248,7 +254,7 @@ class _WhatsNewRow extends StatelessWidget {
         itemBuilder: (context, i) {
           final it = _items[i];
           return Container(
-            width: 210,
+            width: cardWidth,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(18),

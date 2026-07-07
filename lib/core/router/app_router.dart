@@ -6,6 +6,7 @@ import '../../features/chat/presentation/chat_detail_screen.dart';
 import '../../features/components/components_screen.dart';
 import '../../features/email/presentation/compose_screen.dart';
 import '../../features/email/presentation/email_detail_screen.dart';
+import '../../features/profile/profile_screen.dart';
 import '../../features/settings/currency_screen.dart';
 import '../../features/settings/faq_screen.dart';
 import '../../features/settings/two_factor_screen.dart';
@@ -37,6 +38,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/components',
       builder: (context, state) => const ComponentsScreen(),
+    ),
+    GoRoute(
+      path: '/profile',
+      builder: (context, state) => const ProfileScreen(),
     ),
     GoRoute(
       path: '/calendar',

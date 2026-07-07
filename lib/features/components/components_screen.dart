@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lottie/lottie.dart';
 
@@ -21,6 +22,7 @@ class _ComponentsScreenState extends State<ComponentsScreen> {
   bool _switchOn = true;
   double _slider = 0.4;
   final Set<String> _chips = {'Flutter'};
+  String _iconQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -185,6 +187,50 @@ class _ComponentsScreenState extends State<ComponentsScreen> {
             ),
           ),
 
+          // ---- Material icons ----
+          const SectionHeader(title: 'Material icons (cari & salin)'),
+          AppCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  onChanged: (v) =>
+                      setState(() => _iconQuery = v.trim().toLowerCase()),
+                  decoration: InputDecoration(
+                    hintText: 'Cari icon… (cth: home, mail, star)',
+                    prefixIcon: const Icon(Icons.search_rounded),
+                    isDense: true,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14)),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Builder(builder: (context) {
+                  final matches = _kIcons
+                      .where((e) => e.$2.contains(_iconQuery))
+                      .toList();
+                  if (matches.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Center(
+                        child: Text('Tiada icon padan "$_iconQuery"',
+                            style: TextStyle(
+                                color: context.colors.onSurfaceVariant)),
+                      ),
+                    );
+                  }
+                  return Wrap(
+                    spacing: 6,
+                    runSpacing: 14,
+                    children: [
+                      for (final ic in matches) _IconTile(ic.$1, ic.$2),
+                    ],
+                  );
+                }),
+              ],
+            ),
+          ),
+
           // ---- Loaders ----
           const SectionHeader(title: 'Loaders (flutter_spinkit)'),
           AppCard(
@@ -276,3 +322,107 @@ class _LoaderTile extends StatelessWidget {
     );
   }
 }
+
+/// A single icon in the browser. Tap to copy its `Icons.<name>` code.
+class _IconTile extends StatelessWidget {
+  final IconData icon;
+  final String name;
+  const _IconTile(this.icon, this.name);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 76,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () async {
+          await Clipboard.setData(ClipboardData(text: 'Icons.$name'));
+          if (context.mounted) {
+            AppSnackbar.success(context, 'Disalin: Icons.$name');
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            children: [
+              Icon(icon, size: 28, color: context.colors.primary),
+              const SizedBox(height: 6),
+              Text(
+                name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 10),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A curated slice of Material icons for the browser. The string is the exact
+/// identifier so the copied `Icons.<name>` compiles as-is.
+const _kIcons = <(IconData, String)>[
+  (Icons.home_rounded, 'home_rounded'),
+  (Icons.search_rounded, 'search_rounded'),
+  (Icons.settings_rounded, 'settings_rounded'),
+  (Icons.favorite_rounded, 'favorite_rounded'),
+  (Icons.star_rounded, 'star_rounded'),
+  (Icons.mail_rounded, 'mail_rounded'),
+  (Icons.chat_bubble_rounded, 'chat_bubble_rounded'),
+  (Icons.notifications_rounded, 'notifications_rounded'),
+  (Icons.person_rounded, 'person_rounded'),
+  (Icons.group_rounded, 'group_rounded'),
+  (Icons.camera_alt_rounded, 'camera_alt_rounded'),
+  (Icons.photo_rounded, 'photo_rounded'),
+  (Icons.calendar_month_rounded, 'calendar_month_rounded'),
+  (Icons.access_time_rounded, 'access_time_rounded'),
+  (Icons.location_on_rounded, 'location_on_rounded'),
+  (Icons.shopping_cart_rounded, 'shopping_cart_rounded'),
+  (Icons.payments_rounded, 'payments_rounded'),
+  (Icons.credit_card_rounded, 'credit_card_rounded'),
+  (Icons.bar_chart_rounded, 'bar_chart_rounded'),
+  (Icons.trending_up_rounded, 'trending_up_rounded'),
+  (Icons.check_circle_rounded, 'check_circle_rounded'),
+  (Icons.cancel_rounded, 'cancel_rounded'),
+  (Icons.info_rounded, 'info_rounded'),
+  (Icons.warning_rounded, 'warning_rounded'),
+  (Icons.delete_rounded, 'delete_rounded'),
+  (Icons.edit_rounded, 'edit_rounded'),
+  (Icons.add_rounded, 'add_rounded'),
+  (Icons.remove_rounded, 'remove_rounded'),
+  (Icons.close_rounded, 'close_rounded'),
+  (Icons.menu_rounded, 'menu_rounded'),
+  (Icons.more_vert_rounded, 'more_vert_rounded'),
+  (Icons.share_rounded, 'share_rounded'),
+  (Icons.download_rounded, 'download_rounded'),
+  (Icons.upload_rounded, 'upload_rounded'),
+  (Icons.cloud_rounded, 'cloud_rounded'),
+  (Icons.wifi_rounded, 'wifi_rounded'),
+  (Icons.bluetooth_rounded, 'bluetooth_rounded'),
+  (Icons.lock_rounded, 'lock_rounded'),
+  (Icons.visibility_rounded, 'visibility_rounded'),
+  (Icons.thumb_up_rounded, 'thumb_up_rounded'),
+  (Icons.bookmark_rounded, 'bookmark_rounded'),
+  (Icons.flag_rounded, 'flag_rounded'),
+  (Icons.attach_file_rounded, 'attach_file_rounded'),
+  (Icons.link_rounded, 'link_rounded'),
+  (Icons.qr_code_rounded, 'qr_code_rounded'),
+  (Icons.dark_mode_rounded, 'dark_mode_rounded'),
+  (Icons.light_mode_rounded, 'light_mode_rounded'),
+  (Icons.language_rounded, 'language_rounded'),
+  (Icons.map_rounded, 'map_rounded'),
+  (Icons.call_rounded, 'call_rounded'),
+  (Icons.videocam_rounded, 'videocam_rounded'),
+  (Icons.mic_rounded, 'mic_rounded'),
+  (Icons.send_rounded, 'send_rounded'),
+  (Icons.refresh_rounded, 'refresh_rounded'),
+  (Icons.filter_list_rounded, 'filter_list_rounded'),
+  (Icons.sort_rounded, 'sort_rounded'),
+  (Icons.dashboard_rounded, 'dashboard_rounded'),
+  (Icons.folder_rounded, 'folder_rounded'),
+  (Icons.description_rounded, 'description_rounded'),
+  (Icons.rocket_launch_rounded, 'rocket_launch_rounded'),
+];

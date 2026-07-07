@@ -30,42 +30,41 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
-          // Profile header
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 32,
-                  backgroundColor: scheme.primary,
-                  child: Text(
-                    auth.name.initials,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600),
+          // Profile header — tap to open the full profile screen.
+          InkWell(
+            onTap: () => context.push('/profile'),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 32,
+                    backgroundColor: scheme.primary,
+                    child: Text(
+                      auth.name.initials,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(auth.name,
-                          style: context.texts.titleLarge
-                              ?.copyWith(fontWeight: FontWeight.w700)),
-                      Text(auth.email,
-                          style:
-                              TextStyle(color: scheme.onSurfaceVariant)),
-                    ],
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(auth.name,
+                            style: context.texts.titleLarge
+                                ?.copyWith(fontWeight: FontWeight.w700)),
+                        Text(auth.email,
+                            style:
+                                TextStyle(color: scheme.onSurfaceVariant)),
+                      ],
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.edit_outlined),
-                  onPressed: () =>
-                      AppSnackbar.info(context, 'Edit profil — demo'),
-                ),
-              ],
+                  const Icon(Icons.chevron_right_rounded),
+                ],
+              ),
             ),
           ),
 
