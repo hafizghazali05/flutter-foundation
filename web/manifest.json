@@ -1,11 +1,11 @@
 {
-    "name": "flutter_foundation",
-    "short_name": "flutter_foundation",
+    "name": "Flutter Foundation",
+    "short_name": "Foundation",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#6C4DF6",
+    "theme_color": "#6C4DF6",
+    "description": "Reusable Flutter module showcase — auth, chat, email, wallet, courier, maps, charts and more.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

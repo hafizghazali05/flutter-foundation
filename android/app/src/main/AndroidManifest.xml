@@ -2,7 +2,7 @@
     <!-- Required to fetch OpenStreetMap tiles for the map/tracking features. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="flutter_foundation"
+        android:label="Foundation"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

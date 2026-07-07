@@ -12,19 +12,27 @@ import '../../features/email/presentation/compose_screen.dart';
 import '../../features/email/presentation/email_detail_screen.dart';
 import '../../features/map/presentation/map_screen.dart';
 import '../../features/notifications/presentation/notifications_screen.dart';
+import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/settings/currency_screen.dart';
 import '../../features/settings/faq_screen.dart';
 import '../../features/settings/two_factor_screen.dart';
+import '../../features/splash/splash_screen.dart';
 import '../../features/wallet/presentation/wallet_screen.dart';
 import '../widgets/root_shell.dart';
 
-/// App navigation. The root `/` hosts the bottom-nav shell (Home, Chat, Email,
-/// Charts, Settings); detail screens are pushed on top so back navigation just
-/// works.
+/// App navigation. Launch starts at `/splash` (animated brand reveal), which
+/// routes to `/onboarding` on first run or the `/` bottom-nav shell (Home, Chat,
+/// Email, Charts, Settings) otherwise; detail screens are pushed on top so back
+/// navigation just works.
 final appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/splash',
   routes: [
+    GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
+    GoRoute(
+      path: '/onboarding',
+      builder: (context, state) => const OnboardingScreen(),
+    ),
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(path: '/', builder: (context, state) => const RootShell()),
     GoRoute(
